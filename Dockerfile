@@ -4,11 +4,23 @@ LABEL maintainer="victorvld"
 ENV PYTHONUNBUFFERED 1
 
 COPY requeriments.txt /tmp/requeriments.txt
+COPY requeriments.dev.txt /tmp/requeriments.dev.txt
 COPY ./app /app
 WORKDIR /app
 EXPOSE 8000
 
-RUN python -m venv /py && /py/bin/pip install --upgrade pip && /py/bin/pip install -r /tmp/requeriments.txt && rm -rf /tmp && adduser --disabled-password --no-create-home django-user
+ARG DEV=false 
+RUN python -m venv /py && \
+    /py/bin/pip install --upgrade pip && \
+    /py/bin/pip install -r /tmp/requeriments.txt && \
+    if [ $DEV = "true" ]; \
+        then /py/bin/pip install /tmp/requeriments.dev.txt ; \
+    fi && \    
+    rm -rf /tmp && \
+    adduser \
+        --disabled-password \
+        --no-create-home \
+        django-user
 
 # Update the PATH variable in our OS so that we don't need to call the full path to execute python commands
 ENV PATH="/py/bin:$PATH"
