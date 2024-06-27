@@ -3,8 +3,8 @@ LABEL maintainer="victorvld"
 
 ENV PYTHONUNBUFFERED 1
 
-COPY requeriments.txt /tmp/requeriments.txt
-COPY requeriments.dev.txt /tmp/requeriments.dev.txt
+COPY ./requeriments.txt /tmp/requeriments.txt
+COPY ./requeriments.dev.txt /tmp/requeriments.dev.txt
 COPY ./app /app
 WORKDIR /app
 EXPOSE 8000
@@ -14,7 +14,7 @@ RUN python -m venv /py && \
     /py/bin/pip install --upgrade pip && \
     /py/bin/pip install -r /tmp/requeriments.txt && \
     if [ $DEV = "true" ]; \
-        then /py/bin/pip install /tmp/requeriments.dev.txt ; \
+        then /py/bin/pip install -r /tmp/requeriments.dev.txt ; \
     fi && \    
     rm -rf /tmp && \
     adduser \
